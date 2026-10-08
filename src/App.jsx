@@ -30,15 +30,28 @@ export default function App() {
   const [builds, setBuilds] = useState(INITIAL);
   const [query, setQuery] = useState('');
   const [pendingDelete, setPendingDelete] = useState(null);
+  const [editing, setEditing] = useState(null);
 
-  function addBuild(data) {
-    setBuilds([...builds, { id: Date.now(), ...data }]);
+  function saveBuild(data) {
+    if (editing) {
+      setBuilds(builds.map((b) => (b.id === editing.id ? { ...b, ...data } : b)));
+      setEditing(null);
+    } else {
+      setBuilds([...builds, { id: Date.now(), ...data }]);
+    }
+  }
+  function startEdit(build) {
+    setEditing(build);
+  }
+  function cancelEdit() {
+    setEditing(null);
   }
   function askDelete(id) {
     setPendingDelete(id);
   }
   function confirmDelete() {
     setBuilds(builds.filter((b) => b.id !== pendingDelete));
+    if (editing && editing.id === pendingDelete) setEditing(null);
     setPendingDelete(null);
   }
   function cancelDelete() {
@@ -61,7 +74,11 @@ export default function App() {
       </header>
 
       <section className="panel">
-        <BuildForm onAdd={addBuild} />
+        <BuildForm
+          initialBuild={editing}
+          onSubmit={saveBuild}
+          onCancel={cancelEdit}
+        />
       </section>
 
       <section className="panel">
@@ -73,7 +90,7 @@ export default function App() {
         ) : (
           <div className="grid">
             {filtered.map((b) => (
-              <BuildCard key={b.id} build={b} onDelete={askDelete} />
+              <BuildCard key={b.id} build={b} onDelete={askDelete} onEdit={startEdit} />
             ))}
           </div>
         )}

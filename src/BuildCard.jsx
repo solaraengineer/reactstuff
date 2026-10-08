@@ -1,7 +1,7 @@
 import { WEAPONS, ATTACHMENTS, SLOT_LABELS } from './data.js';
 import GunPreview from './GunPreview.jsx';
 
-export default function BuildCard({ build, onDelete }) {
+export default function BuildCard({ build, onDelete, onEdit }) {
   const weapon = WEAPONS[build.weapon];
   const attached = Object.entries(build.attachments || {})
     .filter(([, id]) => id && ATTACHMENTS[id])
@@ -13,7 +13,10 @@ export default function BuildCard({ build, onDelete }) {
       <div className="card-body">
         <div className="card-head">
           <h2 className="card-name">{build.name}</h2>
-          <button className="btn-delete" onClick={() => onDelete(build.id)}>remove</button>
+          <div className="card-actions">
+            <button className="btn-edit" onClick={() => onEdit(build)}>edit</button>
+            <button className="btn-delete" onClick={() => onDelete(build.id)}>remove</button>
+          </div>
         </div>
         <div className="card-meta">
           {weapon.name} · {weapon.caliber}

@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { WEAPONS, ATTACHMENTS, SLOT_LABELS } from './data.js';
 import GunPreview from './GunPreview.jsx';
 
-export default function BuildForm({ onAdd }) {
-  const [name, setName] = useState('');
-  const [weapon, setWeapon] = useState('m4a1');
-  const [attachments, setAttachments] = useState({});
+export default function BuildForm({ onSubmit, onCancel, initialBuild }) {
+  const [name, setName] = useState(initialBuild?.name || '');
+  const [weapon, setWeapon] = useState(initialBuild?.weapon || 'm4a1');
+  const [attachments, setAttachments] = useState(initialBuild?.attachments || {});
+  const [error, setError] = useState('');
 
+  useEffect(() => {
+    setName(initialBuild?.name || '');
+    setWeapon(initialBuild?.weapon || 'm4a1');
+    setAttachments(initialBuild?.attachments || {});
+    setError('');
+  }, [initialBuild]);
+
+  const isEditing = !!initialBuild;
   const slots = WEAPONS[weapon].slots;
 
   function changeWeapon(w) {
@@ -21,10 +30,16 @@ export default function BuildForm({ onAdd }) {
   function submit(e) {
     e.preventDefault();
     const trimmed = name.trim();
-    if (!trimmed) return;
-    onAdd({ name: trimmed, weapon, attachments });
-    setName('');
-    setAttachments({});
+    if (!trimmed) {
+      setError('Name is required');
+      return;
+    }
+    setError('');
+    onSubmit({ name: trimmed, weapon, attachments });
+    if (!isEditing) {
+      setName('');
+      setAttachments({});
+    }
   }
 
   return (
@@ -33,13 +48,19 @@ export default function BuildForm({ onAdd }) {
         <GunPreview weaponId={weapon} attachments={attachments} />
       </div>
       <div className="row">
-        <input
-          type="text"
-          placeholder="Build name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="field"
-        />
+        <div className="field-wrap">
+          <input
+            type="text"
+            placeholder="Build name"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (error) setError('');
+            }}
+            className={'field' + (error ? ' field-error' : '')}
+          />
+          {error && <div className="error">{error}</div>}
+        </div>
         <select value={weapon} onChange={(e) => changeWeapon(e.target.value)} className="field">
           {Object.entries(WEAPONS).map(([id, w]) => (
             <option key={id} value={id}>{w.name}</option>
@@ -69,7 +90,16 @@ export default function BuildForm({ onAdd }) {
           );
         })}
       </div>
-      <button type="submit" className="btn-primary">Add build</button>
+      <div className="form-actions">
+        <button type="submit" className="btn-primary">
+          {isEditing ? 'Save changes' : 'Add build'}
+        </button>
+        {isEditing && (
+          <button type="button" className="btn-ghost" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }
