@@ -1,100 +1,241 @@
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #1a1a1a;
-  color: #e0e0e0;
+  background: #fff;
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 14px;
 }
 
-.app {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 h1 {
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.count {
+  color: #888;
+  font-size: 13px;
+}
+
+.panel {
   margin-bottom: 20px;
 }
 
 .form {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
-  margin-bottom: 20px;
 }
 
-.form input,
-.form select,
-.form button {
-  padding: 6px 10px;
-  background: #2a2a2a;
-  color: #e0e0e0;
-  border: 1px solid #444;
-  border-radius: 3px;
+.preview {
+  background: #f6f6f6;
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.preview svg {
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+  display: block;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.field {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  font-family: inherit;
   font-size: 14px;
+  background: #fff;
+  color: #111;
 }
 
-.form input {
+.row > .field {
   flex: 1;
-  min-width: 150px;
+  min-width: 140px;
 }
 
-.form button {
+.slot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.slot-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.btn-primary {
+  align-self: flex-start;
+  padding: 6px 14px;
+  background: #222;
+  color: #fff;
+  border: 1px solid #222;
+  font-family: inherit;
+  font-size: 14px;
   cursor: pointer;
 }
 
-.form button:hover {
-  background: #3a3a3a;
+.btn-primary:hover { background: #000; }
+
+.search {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 12px;
 }
 
-.list {
-  list-style: none;
-  padding: 0;
+.empty {
+  color: #888;
+  padding: 20px 0;
   margin: 0;
 }
 
-.list li {
+.grid {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
-  padding: 10px;
-  border-bottom: 1px solid #333;
 }
 
-.list .empty {
-  color: #888;
-  justify-content: center;
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
 }
 
 .gun {
-  width: 140px;
-  height: 46px;
+  width: 180px;
+  height: 60px;
   flex-shrink: 0;
+  background: #f6f6f6;
 }
 
-.info {
+.card-body {
   flex: 1;
+  min-width: 0;
 }
 
-.name {
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.card-name {
+  font-size: 15px;
   font-weight: 600;
+  margin: 0;
 }
 
-.meta {
+.card-meta {
+  color: #777;
   font-size: 12px;
-  color: #888;
+  margin-top: 2px;
 }
 
-.list button {
-  padding: 4px 10px;
-  background: #552222;
-  color: #ffcccc;
-  border: 1px solid #773333;
-  border-radius: 3px;
+.btn-delete {
+  background: none;
+  border: none;
+  color: #a33;
+  font-size: 12px;
   cursor: pointer;
-  font-size: 12px;
+  padding: 0;
 }
 
-.list button:hover {
-  background: #772222;
+.btn-delete:hover { text-decoration: underline; }
+
+.chips {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 12px;
+  color: #555;
 }
+
+.chip-slot {
+  color: #999;
+  margin-right: 4px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  border: 1px solid #bbb;
+  padding: 18px 20px;
+  min-width: 280px;
+  max-width: 90vw;
+}
+
+.modal-msg {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-ghost {
+  padding: 6px 14px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #bbb;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-ghost:hover { background: #f3f3f3; }
+
+.btn-danger {
+  padding: 6px 14px;
+  background: #a33;
+  color: #fff;
+  border: 1px solid #a33;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-danger:hover { background: #822; }
